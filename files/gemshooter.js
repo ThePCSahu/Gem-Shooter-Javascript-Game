@@ -4,7 +4,7 @@ last modified: 18.06.2018
 author: Poonam Chand Sahu
 website: https://pcsahu01.github.io
 ----------------------------------------------------------*/
-        var dir = 'files/images/';
+        var dir;
         var score;
         var gameplay;
         var reqUpdate;
@@ -24,11 +24,21 @@ website: https://pcsahu01.github.io
             left: container.offsetLeft,
             top: container.offsetTop
         };
+        
         init();
         //Function Definitions Begin Here
         
         function init()//Entry point for the game
         {
+
+        if(location=="https://pcsahu01.github.io/gem-shooter-game.html")
+        {
+            dir = "https://rawgit.com/pcsahu01/Gem-Shooter-Javascript-Game/master/files/images/";
+        }
+        else
+        {
+            dir = 'files/images/';
+        }
             btnStart.addEventListener('click', startGame);
             container.addEventListener('mousemove', moveTarget, true);
             container.addEventListener('mousedown', function() {
