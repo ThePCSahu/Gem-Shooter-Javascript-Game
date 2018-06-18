@@ -1,4 +1,9 @@
-
+/* --------------------------------------------------------
+Javascript file for Gem Shooter Game
+last modified: 18.06.2018
+author: Poonam Chand Sahu
+website: https://pcsahu01.github.io
+----------------------------------------------------------*/
         var dir = 'files/images/';
         var score;
         var gameplay;
@@ -24,14 +29,14 @@
         
         function init()//Entry point for the game
         {
+            btnStart.addEventListener('click', startGame);
+            container.addEventListener('mousemove', moveTarget, true);
             container.addEventListener('mousedown', function() {
                 fireNow = true;
             }, true);
             container.addEventListener('mouseup', function() {
                 fireNow = false;
             }, true);
-            container.addEventListener('mousemove', moveTarget, true);
-            btnStart.addEventListener('click', startGame);
             btnEnd.addEventListener('click', endGame);
         }
         function moveTarget(e) {//Moves the target image with mouse pointer
