@@ -83,3 +83,11 @@ website: https://pcsahu01.github.io
             text-transform: uppercase;
             width: 100%;
         }
+        .fired{
+            position: absolute;
+            top:0;
+            left:0;
+            background-color: rgba(255,0,0,0.1);
+            border-radius: 50px;
+            z-index:2;
+        }

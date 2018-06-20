@@ -18,6 +18,7 @@ website: https://pcsahu01.github.io
         var gem = document.querySelector(".gem");
         var btnStart = document.querySelector(".btnStart");
         var btnEnd = document.querySelector(".btnEnd");
+        var scoreBoard = document.querySelector(".score");
         var thisContainer = {
             width: container.offsetWidth,
             height: container.offsetHeight,
@@ -41,9 +42,7 @@ website: https://pcsahu01.github.io
         }
             btnStart.addEventListener('click', startGame);
             container.addEventListener('mousemove', moveTarget, true);
-            container.addEventListener('mousedown', function() {
-                fireNow = true;
-            }, true);
+            container.addEventListener('mousedown', mouseDown, true);
             container.addEventListener('mouseup', function() {
                 fireNow = false;
             }, true);
@@ -63,9 +62,10 @@ website: https://pcsahu01.github.io
 
         function startGame(e) {/* Starts the game */
             if (!gameplay) {
+                score = 0;
+                scoreBoard.innerText =  0; //Resets the Score
                 btnEnd.style.display    =   'inline-block';
                 btnStart.style.display    =   'none';
-                score = 0;
                 gameplay = true;
                 callObj(10,"gem");
                 callObj(5,"bomb");
@@ -82,8 +82,23 @@ website: https://pcsahu01.github.io
             for (var obj of objs) {
                 obj.parentNode.removeChild(obj);
             }
+            var tempFires = document.querySelectorAll('.fired');
+            for (var fire of tempFires) {
+                fire.parentNode.removeChild(fire);
+            }
             btnStart.style.display    =   'inline-block';
                 btnEnd.style.display    =   'none';
+        }
+        function mouseDown(e)
+        {
+            var div = document.createElement('div');
+            div.setAttribute('class','fired');            
+            div.style.width = 100 + 'px';
+            div.style.height = 100 + 'px';
+            div.dataset.counter = 100;
+            div.style.top = (e.clientY - 135) + 'px'; 
+            div.style.left = (e.clientX - 125) + 'px';
+            container.appendChild(div);
         }
 
         function update() { /* Updates the game frame */
@@ -92,25 +107,50 @@ website: https://pcsahu01.github.io
             } else {
                 reqUpdate = window.requestAnimationFrame(update)
             }
+            var tempShots = document.querySelectorAll('.fired');
+            for (var shot of tempShots) {
+                fireMover(shot);
+            }
             var objs = document.querySelectorAll('.gem,.bomb');
             for (var obj of objs) {
                 itemMover(obj);
             }
         }
+        function fireMover(e)
+        {
+            if(e.dataset.counter<1)
+            {
+                e.parentNode.removeChild(e);
+            }
+            else
+            {
+                e.style.left = parseInt(e.style.left) + 1.5 +'px';
+                e.style.top = parseInt(e.style.top) + 1.5 +'px';
+                e.style.width = e.dataset.counter + 'px';
+                e.style.height = e.dataset.counter + 'px';
+                e.dataset.counter -= 3;
+            }
+
+        }
         function updateScore(points) { /* Updates the score */
             score += parseInt(points);
-            document.querySelector(".score").innerText = score;
+            scoreBoard.innerText = score;
         }
 
         function itemMover(e) {/* Moves the gems and bombs */
-            if (fireNow && isCollision(target, e)) {
-                if(e.className == "bomb")
-                {//Ends the game if target collides with bomb .
+            var tempShots = document.querySelectorAll('.fired');
+            for (var shot of tempShots) {
+                if(isCollision(shot, e))
+                {
+                    if(e.className == "bomb")
+                    {//Ends the game if target collides with bomb .
                     endGame();
+                    }
+                    shot.parentNode.removeChild(shot);
+                    e.parentNode.removeChild(e);
+                    updateScore(e.dataset.points);
+                    objMaker(e.className);
                 }
-                e.parentNode.removeChild(e);
-                updateScore(e.dataset.points)
-                objMaker(e.className);
             }
             var x = parseInt(e.style.left);
             var y = parseInt(e.style.top);
